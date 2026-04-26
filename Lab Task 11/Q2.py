@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
@@ -15,15 +16,29 @@ encoded_df = pd.get_dummies(vehicles_df, columns=['type'])
 
 model_without_scaling = KMeans(n_clusters=3, random_state=42)
 clusters_raw = model_without_scaling.fit_predict(encoded_df)
-
 vehicles_df['Cluster_NoScaling'] = clusters_raw
+
+plt.figure(figsize=(6,4))
+plt.scatter(vehicles_df['distance_driven'], vehicles_df['service_cost'], c=clusters_raw)
+plt.title("Clusters Without Scaling")
+plt.xlabel("Distance Driven")
+plt.ylabel("Service Cost")
+plt.show()
+
 scaler = StandardScaler()
 scaled_values = scaler.fit_transform(encoded_df)
 
 model_with_scaling = KMeans(n_clusters=3, random_state=42)
 clusters_scaled = model_with_scaling.fit_predict(scaled_values)
-
 vehicles_df['Cluster_Scaling'] = clusters_scaled
+
+plt.figure(figsize=(6,4))
+plt.scatter(vehicles_df['distance_driven'], vehicles_df['service_cost'], c=clusters_scaled)
+plt.title("Clusters With Scaling")
+plt.xlabel("Distance Driven")
+plt.ylabel("Service Cost")
+plt.show()
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
 print(vehicles_df.to_string(index=False))
